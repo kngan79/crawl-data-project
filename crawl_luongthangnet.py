@@ -102,8 +102,12 @@ if all_company_data:
 # Convert all 'id' fields to string and fill null values
 df = df.astype({'companyId': str,'jobId': str})
 df = df.fillna('')
+print('Done processing data')
 
 #  write output data to ggsheet
-df = play_with_gsheet('1PhI06ntaZTb5qKADTJ_eZgB4AcRYnJ4Rf-oH1q-pR_c', 'Sheet1', dataframe=df, method='write')
-print(df)
+play_with_gsheet('1PhI06ntaZTb5qKADTJ_eZgB4AcRYnJ4Rf-oH1q-pR_c', 'detail', dataframe=df, method='write')
+
+# data contains overall metrics only (exclude all fields parsed from 'compensations' field), write to another sheet
+df_exclude_compensations = df[['companyId', 'name', 'compensationMin', 'compensationMax','compensationMedian', 'compensationCount', 'meanYearOfExperience']].drop_duplicates()
+play_with_gsheet('1_UKqPkLDDAvHriui4BIxRNGhiHeZKl2ZB7G5Yv1r_v0', 'overall', dataframe=df_exclude_compensations, method='write')
 
