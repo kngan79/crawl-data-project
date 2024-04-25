@@ -6,8 +6,6 @@ from apiclient import discovery
 from oauth2client import client as o2c
 from oauth2client.service_account import ServiceAccountCredentials
 
-
-
 scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
 creds = ServiceAccountCredentials.from_json_keyfile_name(r'D:\Data_Analyst\projects\crawl-data-project\client_secret_426605622047-l7cu37rlpc74rlfhhe772jene3podtp0.apps.googleusercontent.com.json', scope)
 client = gspread.authorize(creds)
@@ -62,6 +60,17 @@ def play_with_gsheet(spreadsheetId=None, _range=None, dataframe=None, method='re
         result = service.spreadsheets().values().append(spreadsheetId=spreadsheetId, range=_range,
                                                         valueInputOption='USER_ENTERED', insertDataOption='INSERT_ROWS',
                                                         body=body).execute()
+
+def categorize_level(years):
+    if years <= 2:
+        return 'junior'
+    elif years >= 3 and years <= 5:
+        return 'middle'
+    elif years > 5:
+        return 'senior'
+    else:
+        return 'unknown'
+
 # function to call API
 def get_companies_data(url):
     response = requests.get(url)
@@ -101,6 +110,8 @@ if all_company_data:
 
 # Convert all 'id' fields to string and fill null values
 df = df.astype({'companyId': str,'jobId': str})
+df['yearOfExperience'] = df['yearOfExperience'].fillna(0).astype(int)
+df['level_category'] = df['yearOfExperience'].apply(categorize_level)
 df = df.fillna('')
 print('Done processing data')
 
