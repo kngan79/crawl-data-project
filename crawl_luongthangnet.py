@@ -115,7 +115,8 @@ df['level_category'] = df['yearOfExperience'].apply(categorize_level)
 df = df.fillna('')
 print('Done processing data')
 
-#  write output data to ggsheet
+#  clear and write output data to ggsheet
+play_with_gsheet('1PhI06ntaZTb5qKADTJ_eZgB4AcRYnJ4Rf-oH1q-pR_c', 'detail', dataframe=df, method='clear')
 play_with_gsheet('1PhI06ntaZTb5qKADTJ_eZgB4AcRYnJ4Rf-oH1q-pR_c', 'detail', dataframe=df, method='write')
 
 # data contains overall metrics only (exclude all fields parsed from 'compensations' field), write to another sheet
