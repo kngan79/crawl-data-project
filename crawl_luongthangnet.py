@@ -6,11 +6,13 @@ from apiclient import discovery
 from oauth2client import client as o2c
 from oauth2client.service_account import ServiceAccountCredentials
 
+# created an environment variable CREDENTIAL_PATH, which is hidden 
 scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-creds = ServiceAccountCredentials.from_json_keyfile_name(r'D:\Data_Analyst\projects\crawl-data-project\client_secret_426605622047-l7cu37rlpc74rlfhhe772jene3podtp0.apps.googleusercontent.com.json', scope)
+credential_path = os.environ.get('CREDENTIAL_PATH')
+creds = ServiceAccountCredentials.from_json_keyfile_name(credential_path, scope)
 client = gspread.authorize(creds)
 
-with open(r'D:\Data_Analyst\projects\crawl-data-project\authen.json', 'r') as file:
+with open(authen, 'r') as file:
     authen = json.load(file)
 
 # function used to write data to ggsheet
