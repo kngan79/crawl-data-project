@@ -4,10 +4,10 @@
 - Purpose: Collect all inputs of salary of all IT companies, all roles and levels have been input to summarize the salary base range for some common IT roles by number of YoE, get some insights regarding the fluctuation of salary in case of the market downsizing.
 
 # Technique
-- Call API https://server.luongthang.net/companies, which contains information of company name, average salary, number of YoE, compensations
+- Call API https://server.luongthang.net/companies, which contains information of company name, av[luongthang.net]erage salary, number of YoE, compensations
 - Flatten and normalize all json fields and do data transformation (convert data types, fill null values)
 - Do EDA and collect some basic statistical figures on the crawled data (will update soon)
 - Define some metrics and do analysis on those (will update soon)
-- Visualize data with Looker(will update soon).
+- Visualize data with Looker, find report here: [dashboard-luongthang.net](https://lookerstudio.google.com/s/gK7ZmsKwnsE).
 
 
