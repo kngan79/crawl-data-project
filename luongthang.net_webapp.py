@@ -1,29 +1,22 @@
-import os
+from flask import Flask, render_template
 import json
+import os
 import requests
 import pandas as pd
 import gspread
-from dotenv import load_dotenv
-from apiclient import discovery
+# from apiclient import discovery
 from googleapiclient import discovery
 from oauth2client import client as o2c
 from oauth2client.service_account import ServiceAccountCredentials
 
-# created an environment variable CREDENTIAL_PATH and AUTHEN_PATH, which is included in dotenv_path
-dotenv_path = '.\path_to_env_file'
-load_dotenv(dotenv_path)
-
-# Retrieve the paths from the environment variables
-credential_path = os.environ.get('CREDENTIAL_PATH')
-authen_path = os.environ.get('AUTHEN_PATH')
-
-# Use the credentials to authorize`
+# created an environment variable CREDENTIAL_PATH, which is hidden 
 scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
+credential_path = os.environ.get('CREDENTIAL_PATH')
 creds = ServiceAccountCredentials.from_json_keyfile_name(credential_path, scope)
 client = gspread.authorize(creds)
 
-with open(authen_path, 'r') as file:
-    authen_data = json.load(file)
+with open(authen, 'r') as file:
+    authen = json.load(file)
 
 # function used to write data to ggsheet
 def play_with_gsheet(spreadsheetId=None, _range=None, dataframe=None, method='read', first_time=True, service=None):
@@ -32,7 +25,7 @@ def play_with_gsheet(spreadsheetId=None, _range=None, dataframe=None, method='re
     """
     
     if first_time:
-        credentials = o2c.Credentials.new_from_json(json.dumps(authen_data))
+        credentials = o2c.Credentials.new_from_json(json.dumps(authen))
         service = discovery.build('sheets', 'v4', credentials=credentials)
     
     if method == 'read':
@@ -125,14 +118,12 @@ df = df.astype({'companyId': str,'jobId': str})
 df['yearOfExperience'] = df['yearOfExperience'].fillna(0).astype(int)
 df['level_category'] = df['yearOfExperience'].apply(categorize_level)
 df = df.fillna('')
-print('Done processing data')
 
-#  clear and write output data to ggsheet
-play_with_gsheet('1PhI06ntaZTb5qKADTJ_eZgB4AcRYnJ4Rf-oH1q-pR_c', 'detail', method='clear')
-play_with_gsheet('1PhI06ntaZTb5qKADTJ_eZgB4AcRYnJ4Rf-oH1q-pR_c', 'detail', dataframe=df, method='write')
 
-# data contains overall metrics only (exclude all fields parsed from 'compensations' field), write to another sheet
-df_exclude_compensations = df[['companyId', 'name', 'compensationMin', 'compensationMax','compensationMedian', 'compensationCount', 'meanYearOfExperience']].drop_duplicates()
-play_with_gsheet('1_UKqPkLDDAvHriui4BIxRNGhiHeZKl2ZB7G5Yv1r_v0', 'overall', method='clear')
-play_with_gsheet('1_UKqPkLDDAvHriui4BIxRNGhiHeZKl2ZB7G5Yv1r_v0', 'overall', dataframe=df_exclude_compensations, method='write')
+app = Flask(__name__)
+@app.route('/')
+def index():
+    return render_template('index.html', data=df.to_html())
 
+if __name__ == '__main__':
+    app.run(debug=True)
