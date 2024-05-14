@@ -1,8 +1,0 @@
-# Ignore a specific file
-authen.json
-client_secret_426605622047-l7cu37rlpc74rlfhhe772jene3podtp0.apps.googleusercontent.com.json
-luongthang.net_off.ipynb
-
-# Ignore a specific directory
-D:\Data_Analyst\projects\crawl-data-project\luongthang.net\.vscode\config.env
-D:\Data_Analyst\projects\crawl-data-project\luongthang.net\.vscode\settings.json
